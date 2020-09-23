@@ -41,7 +41,7 @@ async function add(scheme) {
     const index = await db('schemes')
       .insert(dbScheme)
     if (scheme.steps) {
-      const steps = await Promise.all(
+      await Promise.all(
         scheme.steps.map(async step => {
           return await db('steps')
             .insert({ ...step, scheme_id: index[0] })
@@ -56,8 +56,7 @@ async function add(scheme) {
     }
   }
   catch (err) {
-    console.log(err)
-    return err
+    Promise.reject(err)
   }
 }
 
@@ -108,7 +107,7 @@ async function update(changes, id) {
   }
   catch (err) {
     //something went wrong somewhere along the line
-    return Promise.reject('Sorry, something went wrong while updating')
+    return Promise.reject(err)
 
   }
 }
